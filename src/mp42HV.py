@@ -11,19 +11,20 @@ volume so that both are still readable.
 import sys
 import array
 import shutil
+import logging
 
+
+# Global variables
 endianness = sys.byteorder
 VC_MIN_SIZE = 131072
 BLOCKSIZE = 65536
 
+# Logging
+logger = logging.getLogger(__name__)
+logging.basicConfig(level="DEBUG", format="%(asctime)s:%(name)s:%(lineno)s:%(levelname)s - %(message)s")
+
 
 ##### Utils
-
-
-def eprint(message):
-    print(message, file=sys.stderr)
-
-
 def intify(s, offset=0):
     return int(s[offset:offset + 4].hex(), 16)
 
@@ -153,7 +154,7 @@ def get_atoms(s_file):
                 raise ValueError("Duplicate {} atom".format(atom.name))
             atoms[atom.name] = atom
         elif not (atom.name in other_atoms):
-            eprint("Unknown atom {}, ignoring".format(atom.name.decode()))
+            logger.error("Unknown atom {}, ignoring".format(atom.name.decode()))
         offset = atom.end
 
     try:
@@ -166,7 +167,7 @@ def embed(srcfile, dstfile):
     try:
         ftyp, mdat, moov = get_atoms(srcfile)
     except (IOError, ValueError) as e:
-        eprint("Error while parsing source file: {}".format(e))
+        logger.error("Error while parsing source file: {}".format(e))
         return 1
 
     if ftyp.size > (BLOCKSIZE - 8):
@@ -202,8 +203,6 @@ def embed(srcfile, dstfile):
 
 
 ##### Main
-
-
 def main():
     if not 3 <= len(sys.argv) <= 4 :
         print("\nUsage: {} <mp4_file> <container_file> [<hybrid_file>]".format(sys.argv[0]))
@@ -215,26 +214,26 @@ def main():
     try:
         mp4file = open(sys.argv[1], mode="rb")
     except IOError as e:
-        eprint("Error while opening video file\n{}".format(e))
+        logger.error("Error while opening video file\n{}".format(e))
         sys.exit(1)
 
     try:
         outname = sys.argv[3] if len(sys.argv) == 4 else "output.mp4"
         outfile = open(outname, mode="wb")
     except IOError as e:
-        eprint("Error while opening output file\n{}".format(e))
+        logger.error("Error while opening output file\n{}".format(e))
         sys.exit(1)
 
     try:
         shutil.copyfile(sys.argv[2], outname)
     except IOError as e:
-        eprint("Could not copy volume into output file:\n{}".format(e))
+        logger.error("Could not copy volume into output file:\n{}".format(e))
         sys.exit(1)
 
     try:
         sys.exit(embed(mp4file, outfile))
     except RuntimeError as e:
-        eprint("Error: {}".format(e))
+        logger.error("Error: {}".format(e))
         sys.exit(1)
 
 
