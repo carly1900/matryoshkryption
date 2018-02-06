@@ -5,7 +5,7 @@
 
 ### Formats magic
 
-[ ] truecrypt/veracrypt <-> mp4
+[X] truecrypt/veracrypt <-> mp4
 
 [ ] mp4 <-> any among {flv, png, jpg, pdf} (preferably flv or png)
 
