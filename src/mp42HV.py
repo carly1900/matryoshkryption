@@ -10,6 +10,7 @@ volume so that both are still readable.
 """
 import sys
 import array
+import shutil
 
 endianness = sys.byteorder
 VC_MIN_SIZE = 131072
@@ -204,26 +205,34 @@ def embed(srcfile, dstfile):
 
 
 def main():
-    if len(sys.argv) != 3:
-        print("\nUsage: {} <cover_file> <container_file>".format(sys.argv[0]))
-        print("\n\tEmbeds mp4 file <cover_file> into VeraCrypt container <container_file>\n\
-        so that both are still readable, and writes the result into <output_file>")
+    if not 3 <= len(sys.argv) <= 4 :
+        print("\nUsage: {} <mp4_file> <container_file> [<hybrid_file>]".format(sys.argv[0]))
+        print("\n\tEmbeds mp4 file <mp4_file> into VeraCrypt container <container_file>\n\
+        and writes the result to <hybrid_file> if provided, else into 'output.mp4'.\n\
+        <hybrid_file> can then be opened as a mp4 video file or as a VeraCrypt container.")
         return
 
     try:
-        infile = open(sys.argv[1], mode="rb")
+        mp4file = open(sys.argv[1], mode="rb")
     except IOError as e:
-        eprint("Error while opening input file\n{}".format(e))
+        eprint("Error while opening video file\n{}".format(e))
         sys.exit(1)
 
     try:
-        outfile = open(sys.argv[2], mode="r+b")
+        outname = sys.argv[3] if len(sys.argv) == 4 else "output.mp4"
+        outfile = open(outname, mode="wb")
     except IOError as e:
         eprint("Error while opening output file\n{}".format(e))
         sys.exit(1)
 
     try:
-        sys.exit(embed(infile, outfile))
+        shutil.copyfile(sys.argv[2], outname)
+    except IOError as e:
+        eprint("Could not copy volume into output file:\n{}".format(e))
+        sys.exit(1)
+
+    try:
+        sys.exit(embed(mp4file, outfile))
     except RuntimeError as e:
         eprint("Error: {}".format(e))
         sys.exit(1)
