@@ -6,12 +6,16 @@
 ### Formats magic
 
 [X] truecrypt/veracrypt <-> mp4
+    `mp42hV.py`
 
-[ ] mp4 <-> any among {flv, png, jpg, pdf} (preferably flv or png)
+[/] mp4 <-> any among {flv, png, jpg, pdf} (preferably flv or png)
+    `angecrypt.py`
 
-[ ] format selected above <-> png
+[X] format selected above <-> png
+    `angecrypt.py`
 
-[ ] png <-> pdf
+[X] png <-> pdf
+    `angecrypt.py`
 
 ### Content
 
