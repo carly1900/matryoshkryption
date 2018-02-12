@@ -10,7 +10,7 @@
 
 # Ange Albertini 2014, BSD Licence - with the help of Jean-Philippe Aumasson
 
-# Port to Python 3 by L. David
+# Port to Python 3 and mp3 support by L. David
 
 import binascii
 import struct
@@ -19,6 +19,7 @@ import sys
 PNGSIG = b"\x89PNG\r\n\x1a\n"
 JPGSIG = b"\xff\xd8"
 FLVSIG = b"FLV"
+MP3SIG = b"\xff\xfb"
 
 filetype = ""   # useful only to name file when decrypted
 
@@ -95,6 +96,7 @@ elif t.startswith(JPGSIG):  # JPG
 
     # and append the actual data of t, skipping the sig
     result = result + t[2:]
+
 elif t.startswith(FLVSIG):
     assert BLOCKSIZE >= 9
     size = len(s) - BLOCKSIZE  # we could make this shorter, but then could require padding again
@@ -111,6 +113,20 @@ elif t.startswith(FLVSIG):
 
     # and append the actual data of t, skipping the sig
     result = result + t[9:]
+
+elif t.startswith(MP3SIG):
+    assert BLOCKSIZE >= 16
+    size = len(s) - BLOCKSIZE
+
+    filetype = "mp3"
+    c = t[:4] + 12 * b"\0"
+    c = ecb_dec.decrypt(c)
+
+    IV = bytes([c[i] ^ p[i] for i in range(BLOCKSIZE)])
+    cbc_enc = algo.new(key, algo.MODE_CBC, IV)
+    result = cbc_enc.encrypt(s) + t[4:]
+
+
 elif t.find(b"%PDF-") > -1:
     assert BLOCKSIZE >= 16
     size = len(s) - BLOCKSIZE  # we take the whole first 16 bits
