@@ -97,7 +97,7 @@ elif t.startswith(JPGSIG):  # JPG
     # and append the actual data of t, skipping the sig
     result = result + t[2:]
 
-elif t.startswith(FLVSIG):
+elif t.startswith(FLVSIG):  # FLV
     assert BLOCKSIZE >= 9
     size = len(s) - BLOCKSIZE  # we could make this shorter, but then could require padding again
     filetype = "flv"
@@ -114,7 +114,7 @@ elif t.startswith(FLVSIG):
     # and append the actual data of t, skipping the sig
     result = result + t[9:]
 
-elif t.startswith(MP3SIG):
+elif t.startswith(MP3SIG):  # MP3
     assert BLOCKSIZE >= 16
     size = len(s) - BLOCKSIZE
 
