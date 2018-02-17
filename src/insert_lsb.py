@@ -48,7 +48,16 @@ def insert_lsb(content, cover, output):
     cover.save(output, format="png")
 
 
-def insert_lsb_visual(content, cover, output):
+def colors2mask(colors):
+    mask = list()
+    mask.append(1 if 'r' in colors.lower() else 0)
+    mask.append(1 if 'g' in colors.lower() else 0)
+    mask.append(1 if 'b' in colors.lower() else 0)
+
+    return mask
+
+
+def insert_lsb_visual(content, cover, output, color):
     content = open(content, "r").read()
     cover = Image.open(cover)
     logger.debug(cover)
@@ -65,6 +74,8 @@ def insert_lsb_visual(content, cover, output):
 #    aux.save("aux.png")
 #    aux = Image.open("aux.png")
 
+    mask = colors2mask(color)
+    logger.debug(mask)
     pixels = cover.load()
     pixels_aux = aux.load()
     for i in range(width):
@@ -72,10 +83,14 @@ def insert_lsb_visual(content, cover, output):
             p = pixels[i, j]
             if pixels_aux[i, j] != (0, 0, 0):
                 # Set LSB of each component to 1
-                pixels[i, j] = (p[0] | 1, p[1] | 1, p[2] | 1)
+                pixels[i, j] = (p[0] | 1 if mask[0] else p[0],
+                                p[1] | 1 if mask[1] else p[1],
+                                p[2] | 1 if mask[2] else p[2])
             else:
                 # Set LSB of each component to 0
-                pixels[i, j] = (p[0] ^ (p[0] & 1), p[1] ^ (p[1] & 1), p[2] ^ (p[2] & 1))
+                pixels[i, j] = (p[0] ^ (p[0] & 1) if mask[0] else p[0],
+                                p[1] ^ (p[1] & 1) if mask[1] else p[1],
+                                p[2] ^ (p[2] & 1) if mask[2] else p[2])
 
     cover.save(output)
 
@@ -98,12 +113,14 @@ def main():
     parser.add_argument("--output", "-o", required=False, default="lsb_output.png", help="Output file")
     parser.add_argument("--visual", "-v", required=False, type=str2bool, nargs='?', const=True, default=False,
                         help="Use visual LSB instead of traditional LSB")
+    parser.add_argument("--color", required=False, default="rgb",
+                        help="Colors in which to hide content if visual")
 
     args = parser.parse_args()
     logger.debug(args)
 
     if args.visual:
-        insert_lsb_visual(args.text, args.cover, args.output)
+        insert_lsb_visual(args.text, args.cover, args.output, args.color.lower())
     else:
         insert_lsb(args.text, args.cover, args.output)
 
