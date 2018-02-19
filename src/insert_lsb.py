@@ -19,35 +19,6 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level="DEBUG", format="%(asctime)s:%(name)s:%(lineno)s:%(levelname)s - %(message)s")
 
 
-def insert_lsb(content, cover, output):
-    content = open(content, "rb").read()
-    logger.debug(content)
-    cover = Image.open(cover)
-
-    import bitarray
-    ba = bitarray.bitarray()
-    ba.frombytes(content)
-    bits = list(map(int, ba))
-    bits += (len(bits) % 3) * [0]   # Pad list so its length is a multiple of 3
-
-    logger.debug(bits)
-    logger.debug(len(bits))
-
-    width, height = cover.size
-    if len(bits) > 3 * width * height:
-        raise RuntimeError("Message is too long and cannot be embedded in the provided cover file")
-
-    pixels = cover.load()
-    for index in range(0, len(bits), 3):
-        row = index // (width * 3)
-        col = (index // 3) % width
-
-        p = pixels[col, row]
-        pixels[col, row] = ((p[0] | 1) - (1 - bits[index]), (p[1] | 1) - (1 - bits[index + 1]), (p[2] | 1) - (1 - bits[index + 2]))
-        logger.debug(pixels[col, row])
-    cover.save(output, format="png")
-
-
 def colors2mask(colors):
     mask = list()
     mask.append('r' in colors.lower())
@@ -55,6 +26,51 @@ def colors2mask(colors):
     mask.append('b' in colors.lower())
 
     return mask
+
+
+def insert_lsb(content, cover, output, colors):
+    content = open(content, "rb").read()
+    logger.debug(content)
+    cover = Image.open(cover)
+
+    mask = colors2mask(colors)
+    logger.debug(mask)
+    nb_comp = sum(mask)  # Number of components which will undergo modifications
+
+    import bitarray
+    ba = bitarray.bitarray()
+    ba.frombytes(content)
+    bits = list(map(int, ba))
+    bits += (len(bits) % nb_comp) * [0]   # Pad list so its length is a multiple of nb_comp
+
+    logger.debug(bits)
+    logger.debug(len(bits))
+
+    width, height = cover.size
+    if len(bits) > nb_comp * width * height:
+        raise RuntimeError("Message is too long and cannot be embedded in the provided cover file")
+
+    pixels = cover.load()
+    for index in range(0, len(bits), nb_comp):
+        row = index // (width * nb_comp)
+        col = (index // nb_comp) % width
+
+        p = pixels[col, row]
+        if nb_comp == 3:
+            pixels[col, row] = ((p[0] | 1) - (1 - bits[index]) if mask[0] else p[0],
+                                (p[1] | 1) - (1 - bits[index + 1]) if mask[1] else p[1],
+                                (p[2] | 1) - (1 - bits[index + 2]) if mask[2] else p[2])
+        elif nb_comp == 2:
+            pixels[col, row] = ((p[0] | 1) - (1 - bits[index]) if mask[0] else p[0],
+                                (p[1] | 1) - (1 - bits[(index + 1) if mask[0] else index]) if mask[1] else p[1],
+                                (p[2] | 1) - (1 - bits[index + 1]) if mask[2] else p[2])
+        elif nb_comp == 1:
+            pixels[col, row] = ((p[0] | 1) - (1 - bits[index]) if mask[0] else p[0],
+                                (p[1] | 1) - (1 - bits[index]) if mask[1] else p[1],
+                                (p[2] | 1) - (1 - bits[index]) if mask[2] else p[2])
+
+        logger.debug(pixels[col, row])
+    cover.save(output, format="png")
 
 
 def insert_lsb_visual(content, cover, output, color):
@@ -113,16 +129,16 @@ def main():
     parser.add_argument("--output", "-o", required=False, default="lsb_output.png", help="Output file")
     parser.add_argument("--visual", "-v", required=False, type=str2bool, nargs='?', const=True, default=False,
                         help="Use visual LSB instead of traditional LSB")
-    parser.add_argument("--color", required=False, default="rgb",
-                        help="Colors in which to hide content if visual")
+    parser.add_argument("--colors", required=False, default="rgb",
+                        help="Colors in which to hide content")
 
     args = parser.parse_args()
     logger.debug(args)
 
     if args.visual:
-        insert_lsb_visual(args.text, args.cover, args.output, args.color.lower())
+        insert_lsb_visual(args.text, args.cover, args.output, args.colors.lower())
     else:
-        insert_lsb(args.text, args.cover, args.output)
+        insert_lsb(args.text, args.cover, args.output, args.colors.lower())
 
 
 if __name__ == "__main__":
