@@ -50,9 +50,9 @@ def insert_lsb(content, cover, output):
 
 def colors2mask(colors):
     mask = list()
-    mask.append(1 if 'r' in colors.lower() else 0)
-    mask.append(1 if 'g' in colors.lower() else 0)
-    mask.append(1 if 'b' in colors.lower() else 0)
+    mask.append('r' in colors.lower())
+    mask.append('g' in colors.lower())
+    mask.append('b' in colors.lower())
 
     return mask
 
