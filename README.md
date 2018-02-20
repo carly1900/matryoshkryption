@@ -6,6 +6,8 @@ A CTF challenge made for Toulouse Hacking Convention 2018 as part of the
 
 ## Organization of the repo
 
+* directory `assets` contains various resources which are necessary to build the
+    challenge
 * directory `doc` is intended to gather documentation about the challenge,
     for instance a description, a write-up and a launchin procedure
 * directory `src` contains the core of the challenge, that is to say its
