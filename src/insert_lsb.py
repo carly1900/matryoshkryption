@@ -7,7 +7,6 @@ Inserts data in the LSBs of a picture, either directly in the bytes or visually.
 """
 import argparse
 import logging
-import sys
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFile
@@ -56,20 +55,24 @@ def insert_lsb(content, cover, output, colors):
         col = (index // nb_comp) % width
 
         p = pixels[col, row]
-        if nb_comp == 3:
-            pixels[col, row] = ((p[0] | 1) - (1 - bits[index]) if mask[0] else p[0],
-                                (p[1] | 1) - (1 - bits[index + 1]) if mask[1] else p[1],
-                                (p[2] | 1) - (1 - bits[index + 2]) if mask[2] else p[2])
-        elif nb_comp == 2:
-            pixels[col, row] = ((p[0] | 1) - (1 - bits[index]) if mask[0] else p[0],
-                                (p[1] | 1) - (1 - bits[(index + 1) if mask[0] else index]) if mask[1] else p[1],
-                                (p[2] | 1) - (1 - bits[index + 1]) if mask[2] else p[2])
-        elif nb_comp == 1:
-            pixels[col, row] = ((p[0] | 1) - (1 - bits[index]) if mask[0] else p[0],
-                                (p[1] | 1) - (1 - bits[index]) if mask[1] else p[1],
-                                (p[2] | 1) - (1 - bits[index]) if mask[2] else p[2])
+        try:
+            if nb_comp == 3:
+                pixels[col, row] = ((p[0] | 1) - (1 - bits[index]) if mask[0] else p[0],
+                                    (p[1] | 1) - (1 - bits[index + 1]) if mask[1] else p[1],
+                                    (p[2] | 1) - (1 - bits[index + 2]) if mask[2] else p[2])
+            elif nb_comp == 2:
+                pixels[col, row] = ((p[0] | 1) - (1 - bits[index]) if mask[0] else p[0],
+                                    (p[1] | 1) - (1 - bits[(index + 1) if mask[0] else index]) if mask[1] else p[1],
+                                    (p[2] | 1) - (1 - bits[index + 1]) if mask[2] else p[2])
+            elif nb_comp == 1:
+                pixels[col, row] = ((p[0] | 1) - (1 - bits[index]) if mask[0] else p[0],
+                                    (p[1] | 1) - (1 - bits[index]) if mask[1] else p[1],
+                                    (p[2] | 1) - (1 - bits[index]) if mask[2] else p[2])
 
-        logger.debug(pixels[col, row])
+            logger.debug(pixels[col, row])
+        except IndexError as e:     # All bits have been embedded
+            break
+
     cover.save(output, format="png")
 
 
