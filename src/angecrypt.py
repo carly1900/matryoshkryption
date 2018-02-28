@@ -53,7 +53,7 @@ def compute_blocksize(algo):
     return algo
 
 
-def angecrypt(source_file, target_file, result_file, encryption_key, algo):
+def angecrypt(source_file, target_file, result_file, encryption_key, algo, path):
     algo = compute_blocksize(algo)
 
     # from Crypto import Random
@@ -183,7 +183,10 @@ def angecrypt(source_file, target_file, result_file, encryption_key, algo):
         f.write(cbc_dec.decrypt(pad(result)))
 
     # generate the script
-    with open("dec-" + target_file + ".py", "w") as ds:
+    if not path.endswith('/'):
+        path += '/'
+    target = target_file.split('/')[-1]
+    with open(path + "dec-" + target + ".py", "w") as ds:
         ds.write(
             """from Crypto.Cipher import %(algo)s
 
@@ -191,14 +194,15 @@ algo = %(algo)s.new(%(key)s, %(algo)s.MODE_CBC, %(IV)s)
 with open("%(source)s", "rb") as f:
     d = f.read()
 d = algo.encrypt(d)
-with open("dec-%(target)s.%(filetype)s", "wb") as f:
+with open("%(path)sdec-%(target)s.%(filetype)s", "wb") as f:
     f.write(d)""" % {
             'algo': algo.__name__.split(".")[-1],
             'filetype': filetype,
             'key': key,
             'IV': IV,
+            'path': path,
             'source': result_file,
-            'target': target_file})
+            'target': target})
 
 
 def main():
@@ -208,11 +212,12 @@ def main():
     parser.add_argument("--output", "-o", required=False, help="Output/resulting file")
     parser.add_argument("--encryption_key", "-k", required=False, help="Encryption key")
     parser.add_argument("--algo", "-a", required=False, default="aes", help="Algorithm to use for encryption")
+    parser.add_argument("--path", "-p", required=False, default="./", help="Path where to put decryption script")
 
     args = parser.parse_args()
     logger.debug(args)
 
-    angecrypt(args.content, args.input, args.output, args.encryption_key, args.algo)
+    angecrypt(args.content, args.input, args.output, args.encryption_key, args.algo, args.path)
 
 
 if __name__ == "__main__":
