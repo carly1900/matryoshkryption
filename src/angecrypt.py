@@ -20,6 +20,7 @@ PNGSIG = b"\x89PNG\r\n\x1a\n"
 JPGSIG = b"\xff\xd8"
 FLVSIG = b"FLV"
 MP3SIG = b"\xff\xfb"
+ID3SIG = b"ID3"
 
 filetype = ""   # useful only to name file when decrypted
 
@@ -126,6 +127,17 @@ elif t.startswith(MP3SIG):  # MP3
     cbc_enc = algo.new(key, algo.MODE_CBC, IV)
     result = cbc_enc.encrypt(s) + t[4:]
 
+elif t.startswith(ID3SIG):  # MP3 with metadata
+    assert BLOCKSIZE >= 16
+    size = len(s) - BLOCKSIZE
+
+    filetype = "mp3"
+    c = t[:4] + 5 * b"\0" + b"#TSSE" + 2 * b"\0"
+    c = ecb_dec.decrypt(c)
+
+    IV = bytes([c[i] ^ p[i] for i in range(BLOCKSIZE)])
+    cbc_enc = algo.new(key, algo.MODE_CBC, IV)
+    result = cbc_enc.encrypt(s) + t[17:]
 
 elif t.find(b"%PDF-") > -1:
     assert BLOCKSIZE >= 16
