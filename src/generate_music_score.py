@@ -6,37 +6,13 @@ generate_music_score
 Creates a music score from an arbitrary text given as an input.
 """
 import json
-import sys
 import logging
 
 # Logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level="DEBUG", format="%(asctime)s:%(name)s:%(lineno)s:%(levelname)s - %(message)s")
 
-char2notes = {"\b": "g d b a",
-              "\t": "c a d e",
-              "\n": "d b b g",
-              "\u000b": "d f e e",
-              "\f": "c g c g",
-              "\r": "b e b d",
-              "\u000e": "b c a b",
-              "\u000f": "g a e b",
-              "\u0010": "d e f b",
-              "\u0011": "d b c b",
-              "\u0012": "g c c f",
-              "\u0013": "d g g b",
-              "\u0014": "b b d g",
-              "\u0015": "a f c d",
-              "\u0016": "e b b e",
-              "\u0017": "g a g d",
-              "\u0018": "e d e f",
-              "\u0019": "f f a g",
-              "\u001a": "a g d d",
-              "\u001b": "f f c f",
-              "\u001c": "b g f d",
-              "\u001d": "a d g a",
-              "\u001e": "a f g e",
-              "\u001f": "b e f d",
+char2notes = {"\n": "d b b g",
               " ": "a e e g",
               "!": "e e c a",
               "\"": "g e g c",
@@ -131,17 +107,16 @@ char2notes = {"\b": "g d b a",
               "{": "g a c f",
               "|": "f a f g",
               "}": "f c e f",
-              "~": "d f b a",
-              "\u007f": "f f d b"}
+              "~": "d f b a"}
 
 
-def encode(src_file, dst_file="output.ly", title="", dict=char2notes):
+def encode(src_file, dst_file="output.ly", title="", dict=char2notes, tagline=""):
     header = ""
     header += '\\version "2.18.2"\n'
     header += "\header {\n"
     header += '  title = "{}"\n'.format(title)
     header += '  composer = "lemeda"\n'
-    #    header += '  tagline = "trololo"\n'
+    header += '  tagline = "{}"\n'.format(open(tagline, mode='r').read())
     header += "}\n"
 
     txt = open(src_file, "r").read()
@@ -165,18 +140,18 @@ def encode(src_file, dst_file="output.ly", title="", dict=char2notes):
 
 def main():
     import argparse
-
     parser = argparse.ArgumentParser(description="Encodes arbitrary text into a music score")
     parser.add_argument("--input", "-i", required=True, help="File containing the text to encode")
     parser.add_argument("--output", "-o", required=False, default="output.ly", help="Lilypond file in which to write.")
     parser.add_argument("--dict", required=False, help="File containing an alternative dictionary (written in \
                         the python dictionary format)")
     parser.add_argument("--title", "-t", required=False, default="", help="Title of the music score")
+    parser.add_argument("--tagline", required=False, default="", help="File containing the tagline of the music score")
 
     args = parser.parse_args()
 
-    d = json.loads(open(args.dict, "r").read()) if args.dict is not None else char2notes
-    encode(args.input, args.output, args.title, d)
+    d = json.loads(open(args.dict, "r").read(), strict=False) if args.dict is not None else char2notes
+    encode(args.input, args.output, args.title, d, args.tagline)
 
 
 if __name__ == "__main__":
