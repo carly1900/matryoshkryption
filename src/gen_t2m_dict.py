@@ -21,7 +21,7 @@ def gen_dict(output_file, export_file=None):
     l = list(map(' '.join, itertools.product("abcdefg", repeat=4)))
     random.shuffle(l)
 
-    d = dict(zip([chr(i) for i in range(48, 127)] + ['\n'] + [chr(i) for i in range(33, 48)], l))
+    d = dict(zip([chr(i) for i in range(48, 127)] + ['\n'] + [chr(i) for i in range(32, 48)], l))
     logger.debug(d)
     logger.debug(len(str(d)))
 
