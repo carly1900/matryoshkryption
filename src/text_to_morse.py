@@ -7,6 +7,7 @@ Creates morse audio file from corresponding text
 """
 import logging
 import os
+import argparse
 
 # Logging
 logger = logging.getLogger(__name__)
@@ -41,9 +42,16 @@ def to_morse(msg):
     return morse_code
 
 
-def text2audio(input_file, output_file, samples_dir):
-    text = open(input_file, "r").read()
-    text = text.upper()
+def text2audio(input_file, output_file, samples_dir, asbytes, prefix):
+
+    if asbytes:
+        text = open(input_file, "rb").read()
+        text = ''.join("{:02x}".format(c) for c in text)
+    else:
+        text = open(input_file, "r").read()
+
+    text = prefix.upper() + text.upper()
+
     logger.debug(text)
 
     try:
@@ -69,18 +77,28 @@ def text2audio(input_file, output_file, samples_dir):
         audio.write(silence_unit)
 
 
+def str2bool(v):
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
 
 def main():
-    import argparse
 
     parser = argparse.ArgumentParser(description="Creates morse audio file from corresponding text")
     parser.add_argument("--input", "-i", required=True, help="File containing the text to encode")
     parser.add_argument("--output", "-o", required=False, default="output.mp3", help="Resulting mp3 file")
     parser.add_argument("--samples", required=False, default="../assets/samples/", help="Samples directory")
+    parser.add_argument("--asbytes", "-b", required=False, type=str2bool, nargs='?', const=True, default=False,
+                        help="Embed the hexadecimal representation of each byte rather than the data itself.")
+    parser.add_argument("--prefix", "-p", required=False, default="", help="Add prefix to data to encode")
 
     args = parser.parse_args()
 
-    text2audio(args.input, args.output, args.samples)
+    text2audio(args.input, args.output, args.samples, args.asbytes, args.prefix)
 
 
 if __name__ == "__main__":
