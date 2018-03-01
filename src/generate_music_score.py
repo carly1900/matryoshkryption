@@ -127,7 +127,7 @@ def encode(src_file, dst_file="output.ly", title="", dict=char2notes, tagline=""
         try:
             staff += dict[i] + " "
         except KeyError as e:  # Character not in dict: ignore
-            logger.error("Unknown key, ignoring:\n".format(e))
+            logger.error("Unknown key {}, ignoring:\n".format(i, e))
             pass
 
     staff += '\\bar "|." }\n'
