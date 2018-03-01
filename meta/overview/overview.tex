@@ -45,37 +45,39 @@
         \node[stepnode] (PNG){png};
         \node[stepnode,right= 1.5cm of PNG] (PDF){pdf};
         \node[stepnode,right= 1.5cm of PDF] (MP3){mp3};
-        \node[stepnode,right= 1.5cm of MP3] (MP4){mp4};
-        \node[stepnode,right= 1.5cm of MP4] (VC){VeraCrypt volume};
-        \node[flagnode,right= 1.5cm of VC] (F){\textbf{Flag}};
-        \node[flagnode,text width = 2.8cm,below right= 6cm and -0.5cm of PDF] (IF){\textbf{Intermediate Flag}};
+        \node[stepnode,right= 1.5cm of MP3] (MP4VC){mp4 / VeraCrypt volume};
+        \node[flagnode,right= 1.5cm of MP4VC] (F){\textbf{Flag}};
+        \node[flagnode,text width = 2.8cm,below right= 3.5cm and 0.5cm of PDF] (IF){\textbf{Intermediate Flag}};
         \node[stepinfo, below= 4cm of PNG, text width = 5cm] (PNGINFO){key: visual LSB (G)
 ~~~~~            iv: ~~visual LSB (B)};
         \node[stepinfo, below right= 5cm and -3.7cm of PNG, color=red, text width = 3 cm] (PDFALPHA){alphabet: LSB};
+        \node[stepinfo, below right= 5.2cm and -2.2cm of PDF, color=red, text width = 3.5 cm] (VCPASS){passphrase for VC volume: tagline};
         
         \node[stepinfo, below= 4cm of PDF, text width= 2.1cm] (PDFINFO){key + iv:
             music score};
-        \node[stepinfo, below= 4cm of MP3, text width= 2.1cm] (MP3INFO){key: morse
+        \node[stepinfo, below right= 1.5cm and -1.5cm of MP3, text width= 2.1cm] (MP3INFO){key: morse
             iv: spectro};
-        \node[stepinfo, below right= 4cm and -3cm  of MP4, text width= 4.8cm] (MP4INFO){passphrase: words ~~~~~~~ hidden in previous steps};
-        \node[hiddennode, below right= 3.8cm and -1cm of MP4, text width= 4.5cm] (MP4H){};
-        \node[stepinfo, below right= 4cm and -3.3cm of VC, text width= 4cm] (VCINFO){\texttt{flag} file containing the flag};
-        \node[hiddennode, below right= 3.8cm and -1.8cm of VC, text width= 4.5cm] (VCH){};
+        \node[hiddennode, below= 1.5cm of MP3, text width= 2.1cm] (MP3H){};
+        %\node[stepinfo, below right= 4cm and -3cm  of MP4, text width= 4.8cm] (MP4INFO){passphrase: tagline ~~~~~~~ of the music score};
+        %\node[hiddennode, below right= 3.8cm and -1cm of MP4, text width= 4.5cm] (MP4H){};
+        %\node[stepinfo, below right= 4cm and -3.3cm of VC, text width= 4cm] (VCINFO){\texttt{flag} file containing the flag};
+        %\node[hiddennode, below right= 3.8cm and -1.8cm of VC, text width= 4.5cm] (VCH){};
 
 
         \draw[nodearrow] (PNG)--(PDF);
         \draw[nodearrow] (PDF)--(MP3);
-        \draw[nodearrow] (MP3)--(MP4);
-        \draw[nodearrow] (MP4)--(VC);
-        \draw[flagarrow] (VC)--(F);
-        \draw[flagarrow, dashed] (PDF.-45) to[out=-65, in=120](IF.north);
+        \draw[nodearrow] (MP3)--(MP4VC);
+%        \draw[nodearrow] (MP4)--(VC);
+        \draw[flagarrow] (MP4VC)--(F);
+        \draw[flagarrow, dashed] (PDF.-45) to[out=-75, in=110](IF.north);
 
         \draw[infoarrow] (PNG)--(PNGINFO);
         \draw[infoarrow, dashed, color=red] (PDFALPHA.east) to[out=15, in=-125](PDF.225);
         \draw[infoarrow] (PDF)--(PDFINFO);
-        \draw[infoarrow] (MP3)--(MP3INFO);
-        \draw[infoarrow] (MP4)--(MP4H.west);
-        \draw[infoarrow] (VC)--(VCH.west);
+        \draw[infoarrow, dashed, color=red] (VCPASS.east) to[out=0, in=-105](MP4VC.225);
+        \draw[infoarrow] (MP3)--(MP3H);
+%        \draw[infoarrow] (MP4)--(MP4H.west);
+%        \draw[infoarrow] (VC)--(VCH.west);
 
     \end{tikzpicture}
 \end{center}
