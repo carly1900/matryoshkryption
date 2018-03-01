@@ -30,6 +30,7 @@ def colors2mask(colors):
 def insert_lsb(content, cover, output, colors):
     content = open(content, "rb").read()
     logger.debug(content)
+
     cover = Image.open(cover)
 
     mask = colors2mask(colors)
@@ -76,8 +77,16 @@ def insert_lsb(content, cover, output, colors):
     cover.save(output, format="png")
 
 
-def insert_lsb_visual(content, cover, output, color):
-    content = open(content, "r").read()
+def insert_lsb_visual(content, cover, output, color, asbytes, prefix):
+
+    if asbytes:
+        content = open(content, "rb").read()
+        content = ''.join("{:02x}".format(c) for c in content)
+    else:
+        content = open(content, "r").read()
+
+    content = prefix + content
+
     cover = Image.open(cover)
     logger.debug(cover)
 
@@ -130,16 +139,20 @@ def main():
     parser.add_argument("--text", "-t", required=True, help="File containing the data to insert")
     parser.add_argument("--cover", "-c", required=True, help="Image file in which to insert data")
     parser.add_argument("--output", "-o", required=False, default="lsb_output.png", help="Output file")
-    parser.add_argument("--visual", "-v", required=False, type=str2bool, nargs='?', const=True, default=False,
-                        help="Use visual LSB instead of traditional LSB")
     parser.add_argument("--colors", required=False, default="rgb",
                         help="Colors in which to hide content")
+    parser.add_argument("--visual", "-v", required=False, type=str2bool, nargs='?', const=True, default=False,
+                        help="Use visual LSB instead of traditional LSB")
+    parser.add_argument("--asbytes", "-b", required=False, type=str2bool, nargs='?', const=True, default=False,
+                        help="Embed the hexadecimal representation of each byte rather than the data itself.\
+                             Available only for visual LSB.")
+    parser.add_argument("--prefix", "-p", required=False, default="", help="Add prefix to data to embed (visual LSB only)")
 
     args = parser.parse_args()
     logger.debug(args)
 
     if args.visual:
-        insert_lsb_visual(args.text, args.cover, args.output, args.colors.lower())
+        insert_lsb_visual(args.text, args.cover, args.output, args.colors.lower(), args.asbytes, args.prefix)
     else:
         insert_lsb(args.text, args.cover, args.output, args.colors.lower())
 
