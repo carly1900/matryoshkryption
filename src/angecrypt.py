@@ -58,7 +58,7 @@ def angecrypt(source_file, target_file, result_file, encryption_key, algo, path)
 
     # from Crypto import Random
     # key = Random.new().read(16)
-    key = encryption_key.encode()
+    key = open(encryption_key, "rb").read(16)
 
     with open(source_file, "rb") as f:
         s = pad(f.read())
@@ -210,7 +210,7 @@ def main():
     parser.add_argument("--content", "-c", required=True, help="Content to embed")
     parser.add_argument("--input", "-i", required=True, help="Input/target file")
     parser.add_argument("--output", "-o", required=False, help="Output/resulting file")
-    parser.add_argument("--encryption_key", "-k", required=False, help="Encryption key")
+    parser.add_argument("--encryption_key", "-k", required=False, help="File containing encryption key")
     parser.add_argument("--algo", "-a", required=False, default="aes", help="Algorithm to use for encryption")
     parser.add_argument("--path", "-p", required=False, default="./", help="Path where to put decryption script")
 
