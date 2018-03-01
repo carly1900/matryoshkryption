@@ -72,10 +72,6 @@ def text2audio(input_file, output_file, samples_dir, asbytes, prefix):
                 sample = sample.read()
                 audio.write(sample)
 
-    # Append some silence units at the end
-    for i in range(10):
-        audio.write(silence_unit)
-
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
