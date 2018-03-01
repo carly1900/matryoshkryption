@@ -15,7 +15,7 @@ You need to solve the first part of the challenge first.
 
 
 ## File provided to the challenger
-* `./export/<file_shasum>.png`
+* `./export/matryoshkryption.tgz`
 
 
 ## Build the challenge

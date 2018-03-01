@@ -23,6 +23,10 @@ python ./src/angecrypt.py -c ./build/dec-pdf_file.pdf -i ./build/png_file -o ./b
 python ./build/dec-png_file.py
 echo "Done!"
 
-cp ./build/dec-png_file.png ./export/$(shasum ./build/dec-png_file.png | awk '{print $1}').png
+sum="$(shasum ./build/dec-png_file.png | awk '{print $1}')"
+
+cp ./build/dec-png_file.png ./export/$sum.png
+tar cvzf ./export/matryoshkryption.tgz --directory ./export/ $sum.png
+rm ./export/$sum.png
 
 echo -e "\nThe output file to give to the challenger can be found in \`./export/\`"
