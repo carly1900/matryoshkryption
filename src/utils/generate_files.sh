@@ -20,7 +20,7 @@ rm ./build/matryoshka_*
 
 # pdf file
 python ./src/utils/gen_pdf_text.py --template ./config/pdf_template --output ./build/pdf_text
-echo -n "THCon 2018 - " | cat - ./config/vc_passphrase > ./build/pdf_tagline
+echo -n "THCon 2018 - $(cat ./config/vc_passphrase | base64)" > ./build/pdf_tagline
 python ./src/generate_music_score.py --input ./build/pdf_text --output ./build/score.ly --dict ./build/dict_t2m --title Stegophony --tagline ./build/pdf_tagline
 lilypond -o ./build/score ./build/score.ly || die "You must install lilypond in order to build the challenge."
 
