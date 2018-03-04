@@ -56,5 +56,8 @@ Some more files can be provided in `config/` and are created if not already pres
 * directory `doc/` gathers documentation about the challenge that will serve as
     deliverables in the framework of TLS-SEC's projet long,
     for instance a description, a write-up and a launching procedure.
+* directory `solve/` contains a description of the solving process for the
+    challenge, as well as source code which can make that process easier.
+    A more detailled solution can be found in `doc/writeup`.
 * directory `src/` contains the core of the challenge, that is to say its
     code and more generally any file required to make it work properly
