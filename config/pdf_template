@@ -1,10 +1,5 @@
-Oh, it seems you got that step right, well done!
-You might want to use what follows to proceed to the next phase: 
+You got that step right, well done! Use what follows to proceed to the next phase:
 key: <put_key_here>
 iv: <put_iv_here>
-Actually, before you go, here is a flag: <put_intermediate_flag_here>.
-Use it to validate the first part of the challenge, and good luck for the
-second one!
-
-Wait, I'm still not done yet. Don't throw away that pdf document too fast,
-it may somehow contain data useful for a further step :)
+Before you go, here is a flag: <put_intermediate_flag_here>
+Use it to validate the 1st part of the challenge, and good luck for the 2nd one! Btw, don't throw away that pdf document too fast, it may contain data useful for a further step :)
