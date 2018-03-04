@@ -39,7 +39,7 @@ python ./src/generate_music_score.py --input ./build/pdf_text --output ./build/s
 lilypond -o ./build/score ./build/score.ly || die "You must install lilypond in order to build the challenge."
 
 cp ./build/score.pdf ./build/pdf_file
-python ./src/angecrypt.py -c ./build/dec-mp3_file.mp3 -i ./build/pdf_file -o ./build/pdf_out -k ./config/pdf_key -a aes -p ./build/ --ivfile png_iv_aux
+python ./src/angecrypt.py -c ./build/dec-mp3_file.mp3 -i ./build/pdf_file -o ./build/pdf_out -k ./config/pdf_key -a aes -p ./build/
 python ./build/dec-pdf_file.py
 echo "Done!"
 
@@ -51,7 +51,7 @@ echo "Creating png file..."
 python ./src/insert_lsb.py --text ./config/png_key --cover ./assets/matryoshka.png --output ./build/matryoshka_1.png --colors g --visual --asbytes --prefix "key: "
 python ./src/insert_lsb.py --text ./build/dict_m2t.txt --cover ./build/matryoshka_1.png --output ./build/matryoshka_2.png --colors r
 
-python ./src/angecrypt.py -c ./build/dec-pdf_file.pdf -i ./build/matryoshka_2.png -o ./aux -k ./config/png_key -a aes -p ./build/ --ivfile png_iv
+python ./src/angecrypt.py -c ./build/dec-pdf_file.pdf -i ./build/matryoshka_2.png -o /dev/null -k ./config/png_key -a aes -p ./build/ --ivfile png_iv
 python ./build/dec-matryoshka2.png.py
 
 python ./src/insert_lsb.py --text ./build/png_iv --cover ./build/matryoshka_2.png --output ./build/matryoshka_out.png --colors b --visual --asbytes --prefix "iv: "
@@ -67,7 +67,7 @@ cp ./build/dec-png_file.png ./export/$sum.png
 tar cvzf ./export/matryoshkryption.tar.gz --directory ./export/ $sum.png
 rm ./export/$sum.png
 
-echo -e "\nThe output file to give to the challenger can be found in \`./export/\`"
+echo -e "\nOutput file to give to the challenger written as \`./export/matryoshkryption.tar.gz\`"
 
 
 
