@@ -15,7 +15,7 @@ You need to solve the first part of the challenge first.
 
 
 ## File provided to the challenger
-* `./export/matryoshkryption.tgz`
+* `./export/matryoshkryption.tar.gz`
 
 
 ## Build the challenge
@@ -38,21 +38,22 @@ List of files in `config`:
 * `pdf_template`: template text used for generating the music score (pdf document)
 * `vc_passphrase`: decryption passphrase for the VeraCrypt volume
 
-Some more files can be provided and are automatically created if not already present in `config/`:
-* `png_key`, `png_iv`: key/iv pair to use to decrypt png file into pdf file
-* `pdf_key`, `pdf_iv`: key/iv pair to use to decrypt pdf file into mp3 file
-* `mp3_key`, `mp3_iv`: key/iv pair to use to decrypt mp3 file into mp4/VC hybrid file
+Some more files can be provided in `config/` and are created if not already present:
+* `png_key`: key to use to decrypt png file into pdf file
+* `pdf_key`: key to use to decrypt pdf file into mp3 file
+* `mp3_key`: key to use to decrypt mp3 file into mp4/VC hybrid file
 
 
 ## Organization of the repo
 
-* directory `assets` contains the resources which are necessary to build the
+* directory `assets/` contains the resources which are necessary to build the
     challenge
-* directory `config` contains the config files necessary to build the challenge
+* directory `config/` contains the config files necessary to build the challenge
     as well as both flag files
-* directory `doc` is intended to gather documentation about the challenge,
-    for instance a description, a write-up and a launchin procedure
-* directory `src` contains the core of the challenge, that is to say its
+* directory `doc/` gathers documentation about the challenge that will serve as
+    deliverables in the framework of TLS-SEC's projet long,
+    for instance a description, a write-up and a launching procedure.
+* directory `src/` contains the core of the challenge, that is to say its
     code and more generally any file required to make it work properly
-* directory `meta` contains files related to the challenge conception-wise,
+* directory `meta/` contains files related to the challenge conception-wise,
     such as a progression recap.
