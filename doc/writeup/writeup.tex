@@ -25,7 +25,7 @@
 
 \usepackage{minted}
 \usemintedstyle{colorful}
-\newmintedfile{python}{fontsize=\small, 
+\newmintedfile{python}{fontsize=\small,
 		   linenos,
 		   numbersep=8pt,
 		   frame=lines,
@@ -68,7 +68,7 @@
 
     \subsection{Handling the \texttt{png} file}
     An image viewer such as \texttt{feh} displays a photograph of a matryoshka.
-    
+
     \begin{figure}[H]
         \begin{center}
             \fbox{\includegraphics[width=0.5\textwidth]{../../assets/matryoshka.png}}
@@ -101,17 +101,17 @@
             \parbox{0.95\textwidth}{%
                 \textbf{Some insights on the PNG file format}\\
                 Understanding the PNG file format in detail is not necessary in order to solve this challenge, but some elements given below may help the reader get a better overview of how this step of the challenge has been built and on how to solve it.\\
-                
+
                 \begin{itemize}
                     \item[\bullet] To be valid, a png file must start with \texttt{$\backslash$x89$\backslash$x50$\backslash$x4e$\backslash$x47$\backslash$x0d$\backslash$x0a$\backslash$x1a$\backslash$x0a}. These bytes are the "magic number" of the PNG format and makes files in that format identifiable as such.
                     \item[\bullet] Data in png files are organized in "chunks", which are segments containing various data about the file. For instance, the \texttt{IHDR} chunk must be the first to appear in the file, and contains information such as the picture's width and height, as well as the bit depth, color type, compression method, filter method, and interlace method. This chunk is 13 bytes long. The \texttt{IDAT} chunk contains the actual data that makes the picture, and can be split into several chunks (all still called \texttt{IDAT}). The \texttt{IEND} chunk marks the end of the file.
-                    \item[\bullet] Manifold types of chunks exist, some of which are required in the file for it to be valid and some of which are optional. One can add custom chunks, which will most likely be ignored by the image viewer when the file is opened. Some chunks have a fixed size, some other a variable size with a fixed limit. The other are assumed to have a variable size and must weigh less than a limit which is hardcoded in the implementations of the standard (for example, \texttt{libpng} specifies that no chunk can weigh more than 8000000 bytes). 
+                    \item[\bullet] Manifold types of chunks exist, some of which are required in the file for it to be valid and some of which are optional. One can add custom chunks, which will most likely be ignored by the image viewer when the file is opened. Some chunks have a fixed size, some other a variable size with a fixed limit. The other are assumed to have a variable size and must weigh less than a limit which is hardcoded in the implementations of the standard (for example, \texttt{libpng} specifies that no chunk can weigh more than 8000000 bytes).
                 \end{itemize}
             }%
         }%
     }
     \vspace{2em}
-    
+
     Without more information, it is a bit difficult to understand how to use
     what we have got so far. There must be something more somewhere in the
     file.\\
@@ -149,7 +149,7 @@
 %            \fbox{\includegraphics[width=0.5\textwidth]{./pictures/matryoshka.png}}
 %        \end{center}
 %    \end{figure}
-    
+
     Let's start with visual LSB. Navigating between the differents plans of each component, we discover that the plan made of the LSBs of the green component holds the message "\texttt{key: <some\_key>}" and that of the blue component the message "\texttt{iv: <some\_iv>}". Both \texttt{<some\_key>} and \texttt{<some\_iv>} seem to be the hexadecimal representation of 16-byte long strings.
 
     % TODO: screenshot?
@@ -207,7 +207,7 @@
         }%
     }
     \vspace{2em}
-    
+
     It thus appears very likely that what we have is some file that has been
     encrypted using angecryption with the key \texttt{<some\_key>} and IV
     \texttt{<some\_iv>} we found previously. Let's try to decrypt with the
@@ -239,7 +239,7 @@
     terms of notes, which semmes even more likely that we have not used the
     alphabet we found earlier. This is quite a long task, which requires focus
     and patience, but is not too complex to achieve.\\
-    
+
     Once the music score decoded into a more textual form, we can put the
     alphabet in a way that makes it suitable for it to be handled by a script -
     for instance in the Python language. Afterwards, the only thing left to do
@@ -249,7 +249,9 @@
     We thus obtain a message which gives us a new key/iv pair - which we can
     save in files named \texttt{pdf\_key} and \texttt{pdf\_iv}, as well as a
     flag, and a piece of advice stating that the pdf document might still be of
-    use.  \textbf{The flag we got validates the first part of the challenge}.\\
+    use.\\
+
+    \textbf{The flag we got validates the first part of the challenge}.\\
 
     Having a closer look at the document, we notice that at the very end of it,
     some kind of copyright line is written. However, the second part of it is
@@ -274,7 +276,7 @@
     \subsection{Handling the \texttt{mp3} file}
     Note: in that section and afterwards, the \texttt{mp3} file we just
     obtained will be refered to as \texttt{<mp3\_file>}.\\
-    
+
     Listening to the \texttt{mp3} let us hear a morse-encoded message. At some
     point, we can also notice some additional noise.\\
     Opening the file in Audacity makes it easier to decode the morse message
@@ -300,7 +302,7 @@
     Running \texttt{file mp3\_output}, we get:\\
     \texttt{mp3\_output: ISO Media, MP4 Base Media v1 [IS0 14496-12:2003]}.\\
     The next file thus appears to be an \texttt{mp4} file.
-   
+
 
     \subsection{Handling the \texttt{mp4} file}
     Note: in that section and afterwards, the \texttt{mp4} file we just
@@ -329,9 +331,12 @@
     information about TrueCrypt makes us aware that TrueCrypt has been
     deprecated for a while, and that a common alternative to it is VeraCrypt.\\
 
-    Trying to mount the mp4 file as a VeraCrypt volume proves successful.
+    Trying to mount the mp4 file as a VeraCrypt volume with the following
+    command proves successful:\\
+    \texttt{veracrypt -p passphrase --mount mp4\_file <mountpoint>}.\\
     Inside the volume, we find a single file named \texttt{flag}.\\
-    \textbf{Its content validates the second part of the challenge}.
 
-    
+    \textbf{The content of the \texttt{flag} file validates the second part of the challenge}.
+
+
 \end{document}
