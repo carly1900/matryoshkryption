@@ -36,19 +36,20 @@
     aware of the presence of the embedded data. Such process can be useful in
     manifold situations, as the fact that it has been used since Ancient Greece
     shows.\\
-    \indent Nowadays though, the techniques commonly used are far different from these
-    of Ancient times, and steganography mostly applies to digital content. In
-    particular, something quite interesting consists in combining it with
-    cryptography, as this provides a means to benefit from the best of both
-    worlds: assuming you use cryptography correctly, the data you conceal is
-    confidential and thus safe from unwanted eyes, and what is more, the very fact
-    that there is encrypted data in the cover file used is undetectable.\\
-    
-    The present challenge aims to provide whomever may tackle it with some
+    \indent Nowadays though, the techniques commonly used are far different
+    from these of Ancient times, and steganography mostly applies to digital
+    content. In particular, something quite interesting consists in combining
+    it with cryptography, as this provides a means to benefit from the best of
+    both worlds: assuming you use cryptography correctly, the data you conceal
+    is confidential and thus safe from unwanted eyes, and what is more, the
+    very fact that there is encrypted data in the cover file used is
+    undetectable.\\
+    \indent The present challenge aims to provide whomever may tackle it with some
     insights on classical steganographic techniques for different kinds of
     files, as well as on how combining steganography with cryptography can be
     implemented practically.\\
-    \indent The following section describes two steganographic techniques that are at
+
+    The following section describes two steganographic techniques that are at
     the core of the realization of the challenge. The last section describes
     in more detail what common methods are used in each step, and how each step
     leads to the next one.\\
@@ -101,43 +102,30 @@
     In the next section, we will describe more specifically what steganographic
     techniques are at stake in each step of the challenge, and how the different
     step are connected to each other.
-    
+
 
 \section*{Matryoshkryption -- Detailed description}
     % structure of the chall
     % techniques used at each step
-    The challenge consists of four steps and is divided in two parts, each corresponding to two steps of the whole challenge. At each step, the challenger gets a
-    file of a new type, and has to find cryptographic material concealed in it
-    to proceed to the next step via Angecryption.\\
+    The challenge consists of four steps and is divided in two parts, each
+    corresponding to two steps of the whole challenge. At each step, the
+    challenger gets a file of a new type, and has to find cryptographic
+    material concealed in it to proceed to the next step via Angecryption.\\
 
-    The challenger initially gets a \texttt{.tar.gz}
-    archive, which once decompressed
-    reveals a PNG file. The steganographic
-    technique used in that step to hide
-    cryptographic material as well as an
-    additional element is that of the LSB
-    (\textbf{L}east \textbf{S}ignificant
-    \textbf{B}it), where the least
-    significant bit of the bytes that make
-    each component (red, green, blue) of a
-    pixel is altered to embed part of the
-    data to conceal. In our case, the
-    symmetric key is hidden in the plan
-    made of the LSBs of the green
-    component, the IV in that of the blue
-    component. Both key and IV are hidden
-    through "visual" LSB: one has to look
-    at the black and white picture
-    resulting of the extraction of the LSB
-    plan to see the hidden message.
-    Besides, the LSB plan of the red
-    component holds an dictionary that
-    will be needed by the challenger later
-    on.\\ \indent The challenger must then
-    write a script that "de-angecrypts"
-    the file using the found key/IV pair.
-    The process of de-angecryption reveals
-    a PDF file.\\
+    The challenger initially gets a \texttt{.tar.gz} archive, which once
+    decompressed reveals a PNG file. The steganographic technique used in that
+    step to hide cryptographic material as well as an additional element is
+    that of the LSB (\textbf{L}east \textbf{S}ignificant \textbf{B}it), where
+    the least significant bit of the bytes that make each component (red,
+    green, blue) of a pixel is altered to embed part of the data to conceal. In
+    our case, the symmetric key is hidden in the plan made of the LSBs of the
+    green component, the IV in that of the blue component. Both key and IV are
+    hidden through "visual" LSB: one has to look at the black and white picture
+    resulting of the extraction of the LSB plan to see the hidden message.
+    Besides, the LSB plan of the red component holds an dictionary that will be
+    needed by the challenger later on.\\ \indent The challenger must then write
+    a script that "de-angecrypts" the file using the found key/IV pair. The
+    process of decryption reveals a PDF file.\\
 
     The second step consists in a PDF document, which displays a music score.
     The dictionary found in the previous step must be used to decode the notes
@@ -146,14 +134,15 @@
     music score holds a pasphrase that will be of use later on. With the new
     key/IV pair, the challenger can proceed to the next step.\\
 
-    After de-angecrypting the PDF document, one gets an audio file in a format
+    After decrypting the PDF document, one gets an audio file in a format
     which is non-standard but close to the MP3 file format. The cryptographic
     material for this step has been embedded in two different ways: the
-    symmetric key is simply morse-encoded, and the IV is hidden in the spectrogram of the file --
-    basically, a picture showing the IV is used to generate an audio file whose
-    spectrography has the aspect of that picture. The audio file does not hold any additional content. Once again,
-    de-angecrypting the current file lets the challenger proceed to the next one,
-    which appears to be a MP4 video file.\\
+    symmetric key is simply morse-encoded, and the IV is hidden in the
+    spectrogram of the file -- basically, a picture showing the IV is used to
+    generate an audio file whose spectrography has the aspect of that picture.
+    The audio file does not hold any additional content. Once again,
+    decrypting the current file lets the challenger proceed to the next
+    one, which appears to be a MP4 video file.\\
 
     The last step consists of what first seems to be a mere MP4 file.
     However, the file is actually the result of the hybridization of a MP4 file
@@ -162,7 +151,7 @@
     then be used to decrypt the volume and mount it. The volume contains a
     single file, whose content is the final flag of the challenge.\\
 
-    
+
 
     % overview
     A graph showing the different steps and their nesting can be found in Fig.\ref{fig:overview}.
@@ -192,7 +181,7 @@
 ~~~~~            iv: ~~visual LSB (B)};
         \node[stepinfo, below right= 5cm and -3.7cm of PNG, color=red, text width = 3.2cm] (PDFALPHA){dict.: LSB (R)};
         \node[stepinfo, below right= 5.2cm and -2.2cm of PDF, color=red, text width = 3.5 cm] (VCPASS){passphrase for VC volume: footer};
-        
+
         \node[stepinfo, below= 4cm of PDF, text width= 2.1cm] (PDFINFO){key + iv:
             music score};
         \node[stepinfo, below right= 1.5cm and -1.5cm of MP3, text width= 2.1cm] (MP3INFO){key: morse
