@@ -58,5 +58,3 @@ Some more files can be provided in `config/` and are created if not already pres
     for instance a description, a write-up and a launching procedure.
 * directory `src/` contains the core of the challenge, that is to say its
     code and more generally any file required to make it work properly
-* directory `meta/` contains files related to the challenge conception-wise,
-    such as a progression recap.
