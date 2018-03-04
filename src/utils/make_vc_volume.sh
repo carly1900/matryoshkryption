@@ -11,4 +11,4 @@ veracrypt -t -c -k '' --pim=0 --encryption=aes --hash=sha-512 --random-source=/d
 # Make inner volume
 veracrypt -t -c -k "" --pim=0 --encryption=aes --hash=sha-512 --random-source=/dev/urandom --volume-type=hidden --filesystem=ext4 -p $(cat config/vc_passphrase) --size=512K ./build/vc_volume
 
-echo "Hybrid volume successfully created.\n\n"
+echo -e "Hybrid volume successfully created.\n\n"

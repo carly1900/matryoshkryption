@@ -43,8 +43,8 @@ def insert_lsb(content, cover, output, colors):
     bits = list(map(int, ba))
     bits += (len(bits) % nb_comp) * [0]   # Pad list so its length is a multiple of nb_comp
 
-    logger.debug(bits)
-    logger.debug(len(bits))
+    #logger.debug(bits)
+    #logger.debug(len(bits))
 
     width, height = cover.size
     if len(bits) > nb_comp * width * height:
@@ -70,7 +70,7 @@ def insert_lsb(content, cover, output, colors):
                                     (p[1] | 1) - (1 - bits[index]) if mask[1] else p[1],
                                     (p[2] | 1) - (1 - bits[index]) if mask[2] else p[2])
 
-            logger.debug(pixels[col, row])
+            #logger.debug(pixels[col, row])
         except IndexError as e:     # All bits have been embedded
             break
 
@@ -94,9 +94,9 @@ def insert_lsb_visual(content, cover, output, color, asbytes, prefix):
 
     aux = Image.new("RGB", (width, height))
     draw = ImageDraw.Draw(aux)
-    w, h = draw.textsize(content)
-    font = ImageFont.truetype("/usr/share/fonts/TTF/Inconsolata-Regular.ttf", 16)
-    draw.text(((width - w) // 2, height - 30), content, (254, 254, 254), font=font)
+    font = ImageFont.truetype("/usr/share/fonts/TTF/Inconsolata-Regular.ttf", 48)
+    w, h = draw.textsize(content, font=font)
+    draw.text(((width - w) // 2, height - 60), content, (254, 254, 254), font=font)
 
 # Decomment next 2 lines if result is not clean enough
 #    aux.save("aux.png")

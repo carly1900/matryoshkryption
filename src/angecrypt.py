@@ -53,7 +53,7 @@ def compute_blocksize(algo):
     return algo
 
 
-def angecrypt(source_file, target_file, result_file, encryption_key, algo, path):
+def angecrypt(source_file, target_file, result_file, encryption_key, algo, path, ivfile=None):
     algo = compute_blocksize(algo)
 
     # from Crypto import Random
@@ -176,6 +176,13 @@ def angecrypt(source_file, target_file, result_file, encryption_key, algo, path)
         sys.exit()
 
     # we have our result, key and IV
+    logger.debug(IV)
+    if not path.endswith('/'):
+        path += '/'
+
+    if ivfile is not None:
+        with open(path + ivfile, "wb") as f:
+            f.write(IV)
 
     # generate the result file
     cbc_dec = algo.new(key, algo.MODE_CBC, IV)
@@ -183,8 +190,6 @@ def angecrypt(source_file, target_file, result_file, encryption_key, algo, path)
         f.write(cbc_dec.decrypt(pad(result)))
 
     # generate the script
-    if not path.endswith('/'):
-        path += '/'
     target = target_file.split('/')[-1]
     with open(path + "dec-" + target + ".py", "w") as ds:
         ds.write(
@@ -210,6 +215,7 @@ def main():
     parser.add_argument("--content", "-c", required=True, help="Content to embed")
     parser.add_argument("--input", "-i", required=True, help="Input/target file")
     parser.add_argument("--output", "-o", required=False, help="Output/resulting file")
+    parser.add_argument("--ivfile", required=False, default=None, help="File containing the iv used")
     parser.add_argument("--encryption_key", "-k", required=False, help="File containing encryption key")
     parser.add_argument("--algo", "-a", required=False, default="aes", help="Algorithm to use for encryption")
     parser.add_argument("--path", "-p", required=False, default="./", help="Path where to put decryption script")
@@ -217,7 +223,7 @@ def main():
     args = parser.parse_args()
     logger.debug(args)
 
-    angecrypt(args.content, args.input, args.output, args.encryption_key, args.algo, args.path)
+    angecrypt(args.content, args.input, args.output, args.encryption_key, args.algo, args.path, args.ivfile)
 
 
 if __name__ == "__main__":

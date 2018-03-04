@@ -22,8 +22,5 @@ function generate() {
     write it into ./config/pdf_template"
 
 [ -f ./config/png_key ] || generate png_key
-[ -f ./config/png_iv ] || generate png_iv
 [ -f ./config/pdf_key ] || generate pdf_key
-[ -f ./config/pdf_iv ] || generate pdf_iv
 [ -f ./config/mp3_key ] || generate mp3_key
-[ -f ./config/mp3_iv ] || generate mp3_iv

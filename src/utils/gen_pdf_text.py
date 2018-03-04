@@ -20,7 +20,7 @@ def gen_text(template_file, output):
     template = open(template_file, "r").read()
 
     key = open("./config/pdf_key", "rb").read()
-    iv = open("./config/pdf_iv", "rb").read()
+    iv = open("./build/pdf_iv", "rb").read()
     flag = open("./config/flag1", "r").read()
 
     key = ''.join("{:02x}".format(c) for c in key)
