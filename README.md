@@ -17,6 +17,9 @@ You need to solve the first part of the challenge first.
 ## File provided to the challenger
 * `./export/matryoshkryption.tar.gz`
 
+## Hint
+* Part 1: none
+* Part 2: Don't use deprecated software!
 
 ## Build the challenge
 * Create a Python virtual environment and install the requirements listed in `requirements.txt`
