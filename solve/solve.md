@@ -1,7 +1,15 @@
-# Matryoshkryption - Solving process
+# Matryoshkryption - Write-up
 
 
 ## First Part
+
+### Challenge Statement
+Wow! I heard about that conf from 31C3 on file formats tweaks and the result is
+pretty impressive.
+
+Will you find what is hidden inside that matryoshka?
+
+### Solving Process
 * Decompress `matryoshkryption.tar.gz`
 * One gets a (malformed) png file (thereafter referred to as `png_file`)
 
@@ -25,7 +33,7 @@
 __The flag one gets from the music score validates the first part of the challenge__.
 
 
-## Part 2
+## Second Part
 
 ### Handling pdf file - Part 2
 * The Copyright line of the music score also contains base64-encoded data, which once decoded gives a passphrase (→ `passphrase`).
