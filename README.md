@@ -7,7 +7,7 @@
 ### Part 1
 Wow! I heard about that conf from 31C3 on file formats tweaks and the result is pretty impressive.
 
-Will you find what is hidden inside that matryioshka?
+Will you find what is hidden inside that matryoshka?
 
 
 ### Part 2
