@@ -54,8 +54,7 @@ Some more files can be provided in `config/` and are created if not already pres
 * directory `config/` contains the config files necessary to build the challenge
     as well as both flag files
 * directory `doc/` gathers documentation about the challenge that will serve as
-    deliverables in the framework of TLS-SEC's projet long,
-    for instance a description, a write-up and a launching procedure.
+    deliverables in the framework of TLS-SEC's projet long.
 * directory `solve/` contains a description of the solving process for the
     challenge, as well as source code which can make that process easier.
     A more detailled solution can be found in `doc/writeup`.
