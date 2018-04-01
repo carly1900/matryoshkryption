@@ -22,8 +22,6 @@ You need to solve the first part of the challenge first.
 * Part 2: Don't use deprecated software!
 
 ## Build the challenge
-* Create a Python virtual environment and install the requirements listed in `requirements.txt`
-* Source the virtual environment
 * `make phase1`
 * In Audacity:
     * Open `./build/spectro.wav`
